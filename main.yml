@@ -1,11 +1,12 @@
--hosts: all
+- hosts: all
   tasks:
   - name: Install ntpd
     yum:
       name: ntp
       state: latest
+
   - name: Start ntpd
     service:
-      name: httpd
+      name: ntpd
       state: started
       enabled: yes
