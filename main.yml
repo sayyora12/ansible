@@ -1,12 +1,21 @@
 - hosts: all
-  tasks:
-  - name: Install ntpd
-    yum:
-      name: ntp
-      state: latest
-
-  - name: Start ntpd
+  handlers:
+  - name: Retart ntpd
     service:
       name: ntpd
-      state: started
+      state: restarted
       enabled: yes
+
+  tasks:
+  - name: Install ntpd
+    yum: 
+      name: ntp
+      state: latest
+    notify: Restart ntpd
+
+  - name: Reconfigure time servers
+    lineinfile:
+      path: /etc/ntp.conf
+      regexp: '^server.*iburst$'
+      line: 'server pool.ntp.org iburst'
+    notify: Restart ntpd
